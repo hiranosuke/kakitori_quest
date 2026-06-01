@@ -13,9 +13,24 @@ export type WritingAreaPosition = 'right' | 'left' | 'bottom'
 export type EndingType = 'tome' | 'hane' | 'harai'
 
 // 1画ぶんのとめ/はね/はらい結果
+//
+// kakitori API (@k1low/kakitori) の CharStrokeData.strokeEnding の実態:
+//   - correct: boolean        → 検出タイプが expected list に含まれるか
+//   - expected: StrokeEndingType[] | undefined → 設定された期待タイプ
+//   - confidence: number      → 確信度 [0, 1]
+//   - velocityProfile: "decelerating" | "constant" | "accelerating"
+//   - actualEndDirection: [number, number] | null
+//
+// ※ 「検出されたタイプ」を直接返すフィールドは存在しない。
+//   velocityProfile で tome(decelerating) / harai(accelerating) を推定可能。
+//   isCorrect は kakitori の correct: boolean をそのまま使う。
+//   mistake カウントは onMistake コールバックの mistakesOnStroke / totalMistakes を参照する。
 export interface StrokeEndingResult {
   strokeIndex: number
-  detectedEnding: EndingType
+  // kakitori は検出タイプを直接公開しないため velocityProfile から推定
+  // "decelerating" → tome, "accelerating" → harai, "constant" → hane (近似)
+  detectedEnding: EndingType | null
+  // kakitori StrokeEndingResult.correct: boolean をそのまま格納
   isCorrect: boolean
 }
 
