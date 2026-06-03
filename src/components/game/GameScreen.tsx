@@ -1,6 +1,7 @@
-import { useCallback } from 'react'
+import { useCallback, useLayoutEffect, useState } from 'react'
 import type { StrokeEndingResult } from '../../types/game'
 import { useGameStore } from '../../store/gameStore'
+import { getEffectiveLayout } from '../../logic/layoutLogic'
 import { BattleStage } from './BattleStage'
 import { WritingArea } from './WritingArea'
 
@@ -15,6 +16,19 @@ export function GameScreen() {
     onCharComplete,
   } = useGameStore()
 
+  const [isLandscape, setIsLandscape] = useState(
+    () => window.innerWidth > window.innerHeight,
+  )
+
+  useLayoutEffect(() => {
+    const update = () => setIsLandscape(window.innerWidth > window.innerHeight)
+    const observer = new ResizeObserver(update)
+    observer.observe(document.documentElement)
+    return () => observer.disconnect()
+  }, [])
+
+  const effectiveLayout = getEffectiveLayout(writingAreaPosition, isLandscape)
+
   const char = currentEntry?.word[currentCharIndex] ?? ''
 
   const handleComplete = useCallback(
@@ -27,8 +41,9 @@ export function GameScreen() {
   const writingPanel = battlePhase === 'writing' && (
     <div
       style={{
-        flex: writingAreaPosition === 'bottom' ? 'none' : 1,
-        height: writingAreaPosition === 'bottom' ? '45%' : '100%',
+        flex: effectiveLayout === 'bottom' ? 'none' : 1,
+        height: effectiveLayout === 'bottom' ? '45%' : '100%',
+        width: effectiveLayout !== 'bottom' ? '40%' : '100%',
       }}
     >
       <WritingArea
@@ -47,7 +62,7 @@ export function GameScreen() {
     </div>
   )
 
-  if (writingAreaPosition === 'bottom') {
+  if (effectiveLayout === 'bottom') {
     return (
       <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
         {battlePanel}
@@ -58,7 +73,7 @@ export function GameScreen() {
 
   return (
     <div style={{ display: 'flex', height: '100vh' }}>
-      {writingAreaPosition === 'left' ? (
+      {effectiveLayout === 'left' ? (
         <>
           {writingPanel}
           {battlePanel}
