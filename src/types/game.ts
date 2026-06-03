@@ -8,7 +8,7 @@ export type Screen =
   | 'settings'
 
 // 書き取りエリアの位置
-export type WritingAreaPosition = 'right' | 'left' | 'bottom'
+export type WritingAreaPosition = 'auto' | 'right' | 'left' | 'bottom'
 
 // とめ/はね/はらい の種別
 export type EndingType = 'tome' | 'hane' | 'harai'

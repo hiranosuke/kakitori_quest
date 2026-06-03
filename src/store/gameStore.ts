@@ -45,7 +45,7 @@ export const useGameStore = create<GameStore>()(
     (set, get) => ({
       // 永続化対象の初期値
       clearedWords: {},
-      writingAreaPosition: 'right',
+      writingAreaPosition: 'auto' as WritingAreaPosition,
 
       // セッション状態の初期値
       screen: 'title',
