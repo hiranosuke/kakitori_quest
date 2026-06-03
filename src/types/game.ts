@@ -61,4 +61,4 @@ export interface SaveData {
 }
 
 // バトルフェーズの状態
-export type BattlePhase = 'writing' | 'battling' | 'won' | 'lost'
+export type BattlePhase = 'writing' | 'battling' | 'won' | 'lost' | 'feedback'

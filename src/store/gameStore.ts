@@ -22,6 +22,7 @@ interface GameStore extends SaveData {
   endingResults: StrokeEndingResult[]
   battlePhase: BattlePhase
   battleMessage: string
+  battleResult: 'win' | 'lose' | null
 
   // アクション: 画面遷移
   goToTitle: () => void
@@ -35,6 +36,8 @@ interface GameStore extends SaveData {
   onBattleWin: () => void
   onBattleLose: () => void
   setBattleMessage: (msg: string) => void
+  setBattleFeedback: (result: 'win' | 'lose', message: string) => void
+  confirmBattle: () => void
 
   // アクション: 設定
   setWritingAreaPosition: (pos: WritingAreaPosition) => void
@@ -55,6 +58,7 @@ export const useGameStore = create<GameStore>()(
       endingResults: [],
       battlePhase: 'writing',
       battleMessage: '',
+      battleResult: null,
 
       goToTitle: () => set({ screen: 'title' }),
 
@@ -129,6 +133,15 @@ export const useGameStore = create<GameStore>()(
       },
 
       setBattleMessage: (msg) => set({ battleMessage: msg }),
+
+      setBattleFeedback: (result, message) =>
+        set({ battlePhase: 'feedback', battleResult: result, battleMessage: message }),
+
+      confirmBattle: () => {
+        const { battleResult } = get()
+        if (battleResult === 'win') get().onBattleWin()
+        else if (battleResult === 'lose') get().onBattleLose()
+      },
 
       setWritingAreaPosition: (pos) => set({ writingAreaPosition: pos }),
     }),
