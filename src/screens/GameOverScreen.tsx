@@ -2,7 +2,7 @@ import { DQWindow } from '../components/ui/DQWindow'
 import { useGameStore } from '../store/gameStore'
 
 export function GameOverScreen() {
-  const { currentEntry, startStage } = useGameStore()
+  const { currentEntry, startStage, goToStageSelect } = useGameStore()
 
   const handleRetry = () => {
     if (currentEntry) startStage(currentEntry)
@@ -40,6 +40,22 @@ export function GameOverScreen() {
           }}
         >
           ▶　やりなおす
+        </button>
+        <button
+          onClick={goToStageSelect}
+          style={{
+            display: 'block',
+            width: '100%',
+            background: 'none',
+            border: 'none',
+            color: 'var(--color-text-dim)',
+            fontFamily: 'var(--font-pixel)',
+            fontSize: '1em',
+            padding: '8px',
+            cursor: 'pointer',
+          }}
+        >
+          ▶　べつの文字をえらぶ
         </button>
       </DQWindow>
     </div>
