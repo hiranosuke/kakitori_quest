@@ -63,6 +63,7 @@ export function WritingArea({
           handleComplete()
         },
       })
+      charInstance.start()
     }
 
     init()
