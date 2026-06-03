@@ -56,6 +56,10 @@ export function WritingArea({
             strokeIndex: strokeIndexRef.current++,
             detectedEnding: inferEndingType(data?.strokeEnding?.velocityProfile),
             isCorrect: data?.strokeEnding?.correct ?? true,
+            expectedEndings: ((data?.strokeEnding?.expected ?? []) as string[])
+              .filter((e): e is 'tome' | 'hane' | 'harai' =>
+                e === 'tome' || e === 'hane' || e === 'harai',
+              ),
           }
           strokeResultsRef.current.push(result)
         },
