@@ -26,6 +26,7 @@ export function WritingArea({
   onMistake,
   onComplete,
 }: WritingAreaProps) {
+  const wrapperRef = useRef<HTMLDivElement>(null)
   const hostRef = useRef<HTMLDivElement>(null)
   const strokeResultsRef = useRef<StrokeEndingResult[]>([])
   const strokeIndexRef = useRef(0)
@@ -36,7 +37,7 @@ export function WritingArea({
   }, [onComplete])
 
   useEffect(() => {
-    if (!hostRef.current) return
+    if (!hostRef.current || !wrapperRef.current) return
 
     strokeResultsRef.current = []
     strokeIndexRef.current = 0
@@ -52,10 +53,10 @@ export function WritingArea({
       // StrictMode の二重 effect によるレース: cleanup が先に走ると
       // charInstance は null のままなので unmount されない。
       // cancelled フラグで非同期完了後の mount を防ぐ。
-      if (cancelled || !hostRef.current) return
+      if (cancelled || !hostRef.current || !wrapperRef.current) return
 
       charInstance = kakitoriChar.create(char)
-      const rect = hostRef.current.getBoundingClientRect()
+      const rect = wrapperRef.current!.getBoundingClientRect()
       const containerSize = Math.min(rect.width, rect.height)
       const size = Math.min(containerSize, maxSize)
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -116,16 +117,25 @@ export function WritingArea({
         「{char}」をかけ！
       </div>
       <div
-        ref={hostRef}
-        className={hasStarted ? undefined : 'writing-pulse'}
+        ref={wrapperRef}
         style={{
           flex: 1,
-          position: 'relative',
-          border: '2px solid transparent',
-          transition: 'border-color 0.3s, opacity 0.5s',
-          opacity: hasStarted ? 1 : 0.2,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
         }}
-      />
+      >
+        <div
+          ref={hostRef}
+          className={hasStarted ? undefined : 'writing-pulse'}
+          style={{
+            position: 'relative',
+            border: '2px solid transparent',
+            transition: 'border-color 0.3s, opacity 0.5s',
+            opacity: hasStarted ? 1 : 0.2,
+          }}
+        />
+      </div>
       {!hasStarted && (
         <div
           style={{
