@@ -100,6 +100,16 @@ export function SettingsScreen() {
         >
           ◀　もどる
         </button>
+
+        <div style={{ marginTop: '24px', borderTop: '1px solid #333', paddingTop: '12px', fontSize: '0.55em', color: '#444', lineHeight: 1.6 }}>
+          Character stroke data via{' '}
+          <a href="https://github.com/k1LoW/hanzi-writer-data-jp" target="_blank" rel="noopener noreferrer" style={{ color: '#555' }}>@k1low/hanzi-writer-data-jp</a>,
+          derived from{' '}
+          <a href="https://github.com/parsimonhi/animCJK" target="_blank" rel="noopener noreferrer" style={{ color: '#555' }}>animCJK</a> (LGPL v3+),{' '}
+          <a href="https://github.com/k1LoW/subAnimJ" target="_blank" rel="noopener noreferrer" style={{ color: '#555' }}>subAnimJ</a> (Arphic PL),{' '}
+          <a href="https://github.com/k1LoW/animNumber" target="_blank" rel="noopener noreferrer" style={{ color: '#555' }}>animNumber</a> (SIL OFL 1.1),{' '}
+          <a href="https://www.unicode.org/charts/unihan.html" target="_blank" rel="noopener noreferrer" style={{ color: '#555' }}>Unihan</a> (Unicode license).
+        </div>
       </DQWindow>
     </div>
   )

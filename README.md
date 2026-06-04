@@ -61,6 +61,12 @@ npm run build
 
 [MIT](LICENSE)
 
+### 文字ストロークデータの帰属表記
+
+このアプリは [@k1low/kakitori](https://github.com/k1LoW/kakitori) を通じて文字ストロークデータを利用しています。以下の上流プロジェクトに帰属します。
+
+Character stroke data via [@k1low/hanzi-writer-data-jp](https://github.com/k1LoW/hanzi-writer-data-jp), derived from [animCJK](https://github.com/parsimonhi/animCJK) ([LGPL v3+](https://github.com/k1LoW/hanzi-writer-data-jp/blob/main/licenses/LGPL.txt); built on [Makemeahanzi](https://github.com/skishore/makemeahanzi) / Arphic PL KaitiM fonts by Arphic Technology), [subAnimJ](https://github.com/k1LoW/subAnimJ) ([Arphic PL](https://github.com/k1LoW/hanzi-writer-data-jp/blob/main/licenses/ARPHICPL.TXT)), [animNumber](https://github.com/k1LoW/animNumber) ([SIL OFL 1.1](https://github.com/k1LoW/animNumber/blob/main/licenses/OFL.txt)), and the [Unihan database](https://www.unicode.org/charts/unihan.html) ([Unicode license](https://github.com/k1LoW/hanzi-writer-data-jp/blob/main/licenses/COPYING.txt)). Full upstream license texts: [hanzi-writer-data-jp/licenses/](https://github.com/k1LoW/hanzi-writer-data-jp/tree/main/licenses).
+
 ---
 
 [@k1low](https://github.com/k1LoW) さんの「kakitori を使ったゲームを教えてほしい」という呼びかけに応えて作りました。
