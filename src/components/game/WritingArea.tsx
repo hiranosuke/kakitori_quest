@@ -1,5 +1,6 @@
 import { useEffect, useRef, useCallback, useState } from 'react'
 import type { StrokeEndingResult, EndingType } from '../../types/game'
+import { STROKE_ENDING_OVERRIDES } from '../../data/strokeEndingOverrides'
 import { HeartDisplay } from '../ui/HeartDisplay'
 
 interface WritingAreaProps {
@@ -60,6 +61,9 @@ export function WritingArea({
       const containerSize = Math.min(rect.width, rect.height)
       const size = Math.min(containerSize, maxSize)
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const override = STROKE_ENDING_OVERRIDES[char]
+      if (override) charInstance.setStrokeEndings(override)
+
       charInstance.mount(hostRef.current, {
         size: size > 0 ? size : undefined,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
