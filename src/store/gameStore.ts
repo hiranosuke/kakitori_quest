@@ -83,14 +83,7 @@ export const useGameStore = create<GameStore>()(
       onStrokeMistake: () => {
         const hearts = get().hearts - 1
         if (hearts <= 0) {
-          // ハート0 → 単語の最初からリスタート
-          set({
-            hearts: MAX_HEARTS,
-            currentCharIndex: 0,
-            endingResults: [],
-            battlePhase: 'writing',
-            battleMessage: `やりなおし！${get().currentEntry!.word[0]}からはじめよう`,
-          })
+          set({ screen: 'gameOver', battlePhase: 'lost' })
         } else {
           set({ hearts, battleMessage: 'まちがえた！' })
         }
