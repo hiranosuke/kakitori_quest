@@ -63,7 +63,7 @@ export function BattleStage() {
             initial={{ x: 40, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
           >
-            <EnemyDisplay char={char} corruptionStyle="default" />
+            <EnemyDisplay />
           </motion.div>
         </AnimatePresence>
 
