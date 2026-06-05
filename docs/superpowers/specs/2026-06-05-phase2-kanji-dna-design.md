@@ -156,3 +156,4 @@ const enemyHpRatio = (word.length - currentCharIndex) / word.length
 - 敵の攻撃アニメーション
 - ステージクリア時の演出強化
 - 部首データを使った種族拡張
+- クリーチャー出現演出（「魔法で漢字が魔物に変えられた」テイストのトランスフォームアニメーション）
