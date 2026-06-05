@@ -25,6 +25,13 @@ interface GameStore extends SaveData {
   battleMessage: string
   battleResult: 'win' | 'lose' | null
 
+  // クリーチャー
+  stageCounter: number
+  creatureSvg: string | null
+
+  // アクション: クリーチャー
+  setCreatureSvg: (svg: string) => void
+
   // アクション: 画面遷移
   goToTitle: () => void
   goToStageSelect: () => void
@@ -62,6 +69,8 @@ export const useGameStore = create<GameStore>()(
       battlePhase: 'writing',
       battleMessage: '',
       battleResult: null,
+      stageCounter: 0,
+      creatureSvg: null,
 
       goToTitle: () => set({ screen: 'title' }),
 
@@ -70,15 +79,17 @@ export const useGameStore = create<GameStore>()(
       goToSettings: () => set({ screen: 'settings' }),
 
       startStage: (entry) =>
-        set({
+        set((state) => ({
           screen: 'game',
           currentEntry: entry,
           currentCharIndex: 0,
           hearts: MAX_HEARTS,
           endingResults: [],
           battlePhase: 'writing',
-          battleMessage: `${entry.word[0]}があらわれた！`,
-        }),
+          battleMessage: `まがった「${entry.word}」があらわれた！`,
+          stageCounter: state.stageCounter + 1,
+          creatureSvg: null,
+        })),
 
       onStrokeMistake: () => {
         const hearts = get().hearts - 1
@@ -129,6 +140,8 @@ export const useGameStore = create<GameStore>()(
       },
 
       setBattleMessage: (msg) => set({ battleMessage: msg }),
+
+      setCreatureSvg: (svg) => set({ creatureSvg: svg }),
 
       setBattleFeedback: (result, message) =>
         set({ battlePhase: 'feedback', battleResult: result, battleMessage: message }),
