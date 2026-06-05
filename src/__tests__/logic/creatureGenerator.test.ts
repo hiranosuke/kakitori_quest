@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { generateCreature, selectSpecies } from '../../logic/creatureGenerator'
+import { generateCreature, generateCreatureName, selectSpecies } from '../../logic/creatureGenerator'
 import type { KanjiDNA } from '../../types/game'
 
 const base: KanjiDNA = { strokeCount: 5, hRatio: 0.5, curvature: 0.3, symmetry: 0.8, hue: 120 }
@@ -28,6 +28,29 @@ describe('generateCreature', () => {
     const spec = generateCreature(base, '花')
     expect(spec.dna).toEqual(base)
     expect(typeof spec.species).toBe('number')
+  })
+})
+
+describe('generateCreatureName', () => {
+  it('種族0(Biped)は「XXマン」を返す', () => {
+    expect(generateCreatureName(0, 'ゆ')).toBe('ゆマン')
+  })
+  it('種族1(Slime)は「XXののろい」を返す', () => {
+    expect(generateCreatureName(1, 'ゆ')).toBe('ゆののろい')
+  })
+  it('種族2(EyeTentacle)は「XXアイ」を返す', () => {
+    expect(generateCreatureName(2, 'ゆ')).toBe('ゆアイ')
+  })
+  it('種族3(Beast)は「XXのけもの」を返す', () => {
+    expect(generateCreatureName(3, 'ゆ')).toBe('ゆのけもの')
+  })
+  it('種族4(Orb)は「そらとぶXX」を返す', () => {
+    expect(generateCreatureName(4, 'ゆ')).toBe('そらとぶゆ')
+  })
+  it('generateCreature の戻り値に name フィールドが含まれる', () => {
+    const spec = generateCreature(base, 'ゆ')
+    expect(typeof spec.name).toBe('string')
+    expect(spec.name.length).toBeGreaterThan(0)
   })
 })
 

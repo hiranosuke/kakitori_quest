@@ -286,8 +286,21 @@ export function selectSpecies(dna: KanjiDNA, word: string): number {
   return (dna.strokeCount + Math.round(dna.hRatio * 10) + wordHash) % 5
 }
 
+const SPECIES_NAME_FN: ((word: string) => string)[] = [
+  (word) => `${word}マン`,
+  (word) => `${word}ののろい`,
+  (word) => `${word}アイ`,
+  (word) => `${word}のけもの`,
+  (word) => `そらとぶ${word}`,
+]
+
+export function generateCreatureName(species: number, word: string): string {
+  return SPECIES_NAME_FN[species](word)
+}
+
 export function generateCreature(dna: KanjiDNA, word: string): CreatureSpec {
   const species = selectSpecies(dna, word)
   const svgString = GENERATORS[species](dna)
-  return { species, dna, svgString }
+  const name = generateCreatureName(species, word)
+  return { species, dna, svgString, name }
 }

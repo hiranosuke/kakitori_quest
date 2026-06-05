@@ -82,4 +82,5 @@ export interface CreatureSpec {
   species: number       // 種族 0〜4
   dna: KanjiDNA
   svgString: string     // 120×120 の SVG 文字列
+  name: string          // 種族+元単語から生成した敵名
 }
