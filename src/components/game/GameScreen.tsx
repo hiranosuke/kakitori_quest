@@ -20,6 +20,7 @@ export function GameScreen() {
     onStrokeMistake,
     onCharComplete,
     setCreatureSvg,
+    setCreatureName,
   } = useGameStore()
 
   const [isLandscape, setIsLandscape] = useState(
@@ -41,7 +42,11 @@ export function GameScreen() {
 
     fetchWordDNA(word)
       .then((dna) => {
-        if (!cancelled) setCreatureSvg(generateCreature(dna, word).svgString)
+        if (!cancelled) {
+          const creature = generateCreature(dna, word)
+          setCreatureSvg(creature.svgString)
+          setCreatureName(creature.name)
+        }
       })
       .catch(() => {
         if (!cancelled) {
@@ -49,7 +54,9 @@ export function GameScreen() {
             strokeCount: 4, hRatio: 0.5, curvature: 0.3, symmetry: 0.8,
             hue: (word.codePointAt(0) ?? 0) % 360,
           }
-          setCreatureSvg(generateCreature(fallback, word).svgString)
+          const creature = generateCreature(fallback, word)
+          setCreatureSvg(creature.svgString)
+          setCreatureName(creature.name)
         }
       })
 
