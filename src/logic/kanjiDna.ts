@@ -80,3 +80,32 @@ function computeSymmetry(allX: number[]): number {
 function avg(arr: number[]): number {
   return arr.length === 0 ? 0 : arr.reduce((s, v) => s + v, 0) / arr.length
 }
+
+// ---- CDN フェッチ ----
+
+const CDN = 'https://cdn.jsdelivr.net/npm/hanzi-writer-data@latest'
+
+export async function fetchWordDNA(word: string): Promise<KanjiDNA> {
+  const dnaList = await Promise.all(
+    word.split('').map(async (char) => {
+      const data = await fetchHanziData(char)
+      return data ? extractDNA(char, data) : fallbackDNA(char)
+    }),
+  )
+  return combineDNA(dnaList)
+}
+
+async function fetchHanziData(char: string): Promise<HanziWriterData | null> {
+  try {
+    const res = await fetch(`${CDN}/${char}.json`)
+    if (!res.ok) return null
+    return res.json() as Promise<HanziWriterData>
+  } catch {
+    return null
+  }
+}
+
+function fallbackDNA(char: string): KanjiDNA {
+  const hue = (char.codePointAt(0) ?? 0) % 360
+  return { strokeCount: 4, hRatio: 0.5, curvature: 0.3, symmetry: 0.8, hue }
+}
