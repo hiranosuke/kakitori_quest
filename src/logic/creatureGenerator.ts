@@ -287,11 +287,11 @@ export function selectSpecies(dna: KanjiDNA, word: string): number {
 }
 
 const SPECIES_NAME_FN: ((word: string) => string)[] = [
-  (word) => `${word}マン`,
-  (word) => `${word}ののろい`,
-  (word) => `${word}アイ`,
-  (word) => `${word}のけもの`,
-  (word) => `そらとぶ${word}`,
+  (word) => `「${word}」マン`,
+  (word) => `「${word}」ののろい`,
+  (word) => `「${word}」アイ`,
+  (word) => `「${word}」のけもの`,
+  (word) => `そらとぶ「${word}」`,
 ]
 
 export function generateCreatureName(species: number, word: string): string {

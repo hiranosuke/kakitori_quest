@@ -33,19 +33,19 @@ describe('generateCreature', () => {
 
 describe('generateCreatureName', () => {
   it('種族0(Biped)は「XXマン」を返す', () => {
-    expect(generateCreatureName(0, 'ゆ')).toBe('ゆマン')
+    expect(generateCreatureName(0, 'ゆ')).toBe('「ゆ」マン')
   })
   it('種族1(Slime)は「XXののろい」を返す', () => {
-    expect(generateCreatureName(1, 'ゆ')).toBe('ゆののろい')
+    expect(generateCreatureName(1, 'ゆ')).toBe('「ゆ」ののろい')
   })
   it('種族2(EyeTentacle)は「XXアイ」を返す', () => {
-    expect(generateCreatureName(2, 'ゆ')).toBe('ゆアイ')
+    expect(generateCreatureName(2, 'ゆ')).toBe('「ゆ」アイ')
   })
   it('種族3(Beast)は「XXのけもの」を返す', () => {
-    expect(generateCreatureName(3, 'ゆ')).toBe('ゆのけもの')
+    expect(generateCreatureName(3, 'ゆ')).toBe('「ゆ」のけもの')
   })
   it('種族4(Orb)は「そらとぶXX」を返す', () => {
-    expect(generateCreatureName(4, 'ゆ')).toBe('そらとぶゆ')
+    expect(generateCreatureName(4, 'ゆ')).toBe('そらとぶ「ゆ」')
   })
   it('generateCreature の戻り値に name フィールドが含まれる', () => {
     const spec = generateCreature(base, 'ゆ')
