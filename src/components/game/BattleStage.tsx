@@ -24,9 +24,8 @@ export function BattleStage() {
   const word = currentEntry?.word ?? ''
   const strokeFeedback = buildStrokeFeedback(endingResults)
 
-  // 敵HP: battling/feedback/won フェーズ中は「この文字クリア後」の値を先取りして表示
+  // 敵HP: feedback/won フェーズ中は「この文字クリア後」の値を先取りして表示
   const isResolved =
-    battlePhase === 'battling' ||
     (battlePhase === 'feedback' && battleResult === 'win') ||
     battlePhase === 'won'
   const effectiveCleared = isResolved ? currentCharIndex + 1 : currentCharIndex
