@@ -21,6 +21,7 @@ export function GameScreen() {
     onCharComplete,
     setCreatureSvg,
     setCreatureName,
+    setBattleMessage,
   } = useGameStore()
 
   const [isLandscape, setIsLandscape] = useState(
@@ -46,6 +47,7 @@ export function GameScreen() {
           const creature = generateCreature(dna, word)
           setCreatureSvg(creature.svgString)
           setCreatureName(creature.name)
+          setBattleMessage(`${creature.name}があらわれた！`)
         }
       })
       .catch(() => {
@@ -57,6 +59,7 @@ export function GameScreen() {
           const creature = generateCreature(fallback, word)
           setCreatureSvg(creature.svgString)
           setCreatureName(creature.name)
+          setBattleMessage(`${creature.name}があらわれた！`)
         }
       })
 
