@@ -41,7 +41,7 @@ export function BattleStage() {
       if (result === 'win') {
         setBattleFeedback('win', MSG.attackSuccess(hearts))
       } else {
-        setBattleFeedback('lose', MSG.attackFail)
+        setBattleFeedback('lose', MSG.attackFail(char))
       }
     }, 1500)
 
