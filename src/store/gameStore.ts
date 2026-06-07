@@ -109,7 +109,9 @@ export const useGameStore = create<GameStore>()(
         set((state) => ({
           endingResults: [...state.endingResults, ...results],
           battlePhase: 'battling',
-          battleMessage: MSG.battle,
+          battleMessage: MSG.battle(
+            state.currentEntry?.word[state.currentCharIndex] ?? '',
+          ),
         }))
       },
 
@@ -126,7 +128,7 @@ export const useGameStore = create<GameStore>()(
           set({
             currentCharIndex: nextIndex,
             battlePhase: 'writing',
-            battleMessage: MSG.nextChar,
+            battleMessage: MSG.nextChar(currentEntry.word[nextIndex]),
           })
         }
       },
@@ -139,7 +141,7 @@ export const useGameStore = create<GameStore>()(
           set({
             hearts,
             battlePhase: 'writing',
-            battleMessage: MSG.defeat,
+            battleMessage: MSG.defeat(currentEntry.word),
           })
         }
       },

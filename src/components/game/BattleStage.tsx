@@ -12,6 +12,7 @@ export function BattleStage() {
   const {
     currentEntry,
     currentCharIndex,
+    hearts,
     battlePhase,
     battleResult,
     endingResults,
@@ -38,7 +39,7 @@ export function BattleStage() {
     const result = resolveBattle(endingResults)
     const timer = setTimeout(() => {
       if (result === 'win') {
-        setBattleFeedback('win', MSG.attackSuccess)
+        setBattleFeedback('win', MSG.attackSuccess(hearts))
       } else {
         setBattleFeedback('lose', MSG.attackFail)
       }

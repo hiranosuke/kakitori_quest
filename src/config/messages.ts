@@ -1,11 +1,11 @@
 export const MSG = {
   loading: 'よみこみちゅう...',
   enemyAppeared: (name: string) => `${name}があらわれた！`,
-  battle: 'バトル！',
+  battle: (char: string) => `${char}にこうげき！`,
   strokeMistake: 'まちがえた！',
-  nextChar: 'つぎのもじ！',
-  attackSuccess: 'ヒット！',
+  nextChar: (char: string) => `${char}にこうげき！`,
+  attackSuccess: (hearts: number) => `ヒット！のこり${hearts}こころ`,
   attackFail: 'ミス....',
-  defeat: 'まけた…もういちどちょうせん！',
+  defeat: (word: string) => `「${word}」にまけた…もういちどちょうせん！`,
   gameOver: 'もういちどちょうせん！',
 }
