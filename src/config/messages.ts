@@ -36,4 +36,15 @@ export const MSG = {
     buttonLabel: 'かいふくやく',
     used: 'かいふくやくをつかった！',
   },
+
+  world: {
+    locked: '🔒',
+    cleared: '★',
+    bossStage: 'ボスせん！',
+    bossLabel: (hint: string) => `${hint} ボス`,
+    clearTitle: 'ワールドクリア！',
+    nextUnlocked: (name: string) => `${name}が かいほうされた！`,
+    lastWorld: 'すべてのワールドをクリア！',
+    backToWorlds: 'ワールドせんたく',
+  },
 }

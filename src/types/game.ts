@@ -1,6 +1,7 @@
 // 画面識別子
 export type Screen =
   | 'title'
+  | 'world-select'
   | 'stageSelect'
   | 'game'
   | 'stageComplete'
@@ -8,6 +9,7 @@ export type Screen =
   | 'settings'
   | 'shop'
   | 'wardrobe'
+  | 'world-clear'
 
 // 書き取りエリアの位置
 export type WritingAreaPosition = 'auto' | 'right' | 'left' | 'bottom'
