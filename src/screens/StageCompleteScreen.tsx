@@ -10,15 +10,17 @@ export function StageCompleteScreen() {
   const { currentEntry, endingResults, clearedWords, goToStageSelect, lastStageGold } = useGameStore()
   const stars = calculateStars(endingResults)
   const word = currentEntry?.word ?? ''
+  const id = currentEntry?.id ?? ''
 
   useEffect(() => {
-    const prev = clearedWords[word] ?? 0
+    if (!id) return
+    const prev = clearedWords[id] ?? 0
     if (stars > prev) {
       useGameStore.setState((s) => ({
-        clearedWords: { ...s.clearedWords, [word]: stars },
+        clearedWords: { ...s.clearedWords, [id]: stars },
       }))
     }
-  }, [word, stars, clearedWords])
+  }, [id, stars, clearedWords])
 
   return (
     <div
