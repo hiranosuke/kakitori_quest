@@ -54,8 +54,9 @@ node scripts/fetch-grade-kanji.mjs 2
 
 3. **絵文字ヒントを追加** — `❓` を適切な絵文字に変更する
 
-4. **id の重複確認** — 既存の `wordList.ts` と id が重複していないか確認する
-   - 重複する場合は `id: 'うみ-kanji'` のように区別する
+4. **id の確認** — id は単語文字列そのもの（`'海'`、`'火山'`、`'あめ'`）を使う
+   - 漢字は文字そのものが一意なので衝突しない
+   - 既存の wordList.ts に同じ文字列の id がないか念のため確認する
 
 5. **漢字の学年確認** — 単語内の全漢字がその学年以下であることを確認する
    - kanjiapi.dev で個別確認: `curl https://kanjiapi.dev/v1/kanji/海`
@@ -67,8 +68,8 @@ node scripts/fetch-grade-kanji.mjs 2
 
 ```ts
 // 漢字1文字（小学2年生）
-{ id: 'うみ', word: '海', reading: 'うみ', hint: '🌊' },
-{ id: 'くも-kanji', word: '雲', reading: 'くも', hint: '☁️' }, // 'くも'はひらがな版と重複するため区別
+{ id: '海', word: '海', reading: 'うみ', hint: '🌊' },
+{ id: '雲', word: '雲', reading: 'くも', hint: '☁️' }, // ひらがな'くも'と読みは同じでも id は衝突しない
 ```
 
 ### Step 4: worlds.ts の wordIds に追加
@@ -79,7 +80,7 @@ node scripts/fetch-grade-kanji.mjs 2
 {
   id: 'grade2',
   name: '2ねんせいワールド',
-  wordIds: ['うみ', 'くも-kanji', ...],
+  wordIds: ['海', '雲', ...],
   bossWord: 'しんりんのとり',
   bossHint: '🐦',
 }
