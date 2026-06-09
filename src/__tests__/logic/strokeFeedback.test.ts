@@ -45,9 +45,23 @@ describe('buildStrokeFeedback', () => {
     )
   })
 
-  it('detectedEnding が null の不正解は無視する', () => {
+  it('detectedEnding が null の不正解はフォールバックメッセージを返す', () => {
     const results = [makeResult(0, false, null), makeResult(1, false, 'tome')]
-    expect(buildStrokeFeedback(results)).toBe('2かくめ：とめになっています')
+    expect(buildStrokeFeedback(results)).toBe(
+      '1かくめ：かき方を確かめよう\n2かくめ：とめになっています',
+    )
+  })
+
+  it('全画 detectedEnding が null の場合もフォールバックメッセージを返す', () => {
+    const results = [makeResult(0, false, null), makeResult(1, false, null)]
+    expect(buildStrokeFeedback(results)).toBe(
+      '1かくめ：かき方を確かめよう\n2かくめ：かき方を確かめよう',
+    )
+  })
+
+  it('detectedEnding が null かつ expectedEndings あればそれを使ったフォールバックを返す', () => {
+    const results = [makeResult(0, false, null, ['tome'])]
+    expect(buildStrokeFeedback(results)).toBe('1かくめ：とめを確かめよう')
   })
 
   it('expectedEndings がある場合は「ではなく〇〇にしましょう」形式を返す', () => {

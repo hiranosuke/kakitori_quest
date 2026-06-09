@@ -51,60 +51,63 @@ export function WardrobeScreen() {
 
         {/* 勇者プレビュー */}
         <div style={{ display: 'flex', justifyContent: 'center' }}>
-          <HeroDisplay />
+          <HeroDisplay size={96} />
         </div>
 
-        {/* スロット別アイテムリスト */}
+        {/* 所持アイテムリスト */}
         <div style={{ flex: 1, overflowY: 'auto' }}>
-          {(Object.keys(DECORATION_SLOTS) as DecorationSlotId[]).map((slot) => (
-            <div key={slot} style={{ marginBottom: '16px' }}>
-              <div
-                style={{
-                  color: 'var(--color-text-dim)',
-                  fontSize: '0.75em',
-                  borderBottom: '1px solid #333',
-                  paddingBottom: '4px',
-                  marginBottom: '8px',
-                }}
-              >
-                {DECORATION_SLOTS[slot].label}
-              </div>
-              {decorationItems
-                .filter((i) => i.slot === slot)
-                .map((item) => {
-                  const owned = purchasedDecorations.includes(item.id)
-                  const isEquipped = equippedItems[slot] === item.id
-                  return (
-                    <div
-                      key={item.id}
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '8px',
-                        padding: '8px 4px',
-                        borderBottom: '1px solid #111',
-                        opacity: owned ? 1 : 0.4,
-                      }}
-                    >
-                      <div style={{ flex: 1 }}>
-                        <div style={{ fontSize: '0.9em' }}>{item.name}</div>
-                        <div style={{ color: 'var(--color-text-dim)', fontSize: '0.75em' }}>{item.description}</div>
-                      </div>
-                      {!owned ? (
-                        <span style={{ fontSize: '0.75em', color: '#555' }}>{MSG.wardrobe.notOwned}</span>
-                      ) : (
+          {purchasedDecorations.length === 0 ? (
+            <div style={{ color: 'var(--color-text-dim)', fontSize: '0.8em', textAlign: 'center', padding: '16px 0' }}>
+              {MSG.wardrobe.noItems}
+            </div>
+          ) : (
+            (Object.keys(DECORATION_SLOTS) as DecorationSlotId[]).map((slot) => {
+              const ownedInSlot = decorationItems.filter(
+                (i) => i.slot === slot && purchasedDecorations.includes(i.id)
+              )
+              if (ownedInSlot.length === 0) return null
+              return (
+                <div key={slot} style={{ marginBottom: '16px' }}>
+                  <div
+                    style={{
+                      color: 'var(--color-text-dim)',
+                      fontSize: '0.75em',
+                      borderBottom: '1px solid #333',
+                      paddingBottom: '4px',
+                      marginBottom: '8px',
+                    }}
+                  >
+                    {DECORATION_SLOTS[slot].label}
+                  </div>
+                  {ownedInSlot.map((item) => {
+                    const isEquipped = equippedItems[slot] === item.id
+                    return (
+                      <div
+                        key={item.id}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '8px',
+                          padding: '8px 4px',
+                          borderBottom: '1px solid #111',
+                        }}
+                      >
+                        <div style={{ flex: 1 }}>
+                          <div style={{ fontSize: '0.9em' }}>{item.name}</div>
+                        </div>
                         <button
                           style={BTN_STYLE(isEquipped)}
                           onClick={() => handleEquip(item)}
                         >
                           {isEquipped ? MSG.wardrobe.unequip : MSG.wardrobe.equip}
                         </button>
-                      )}
-                    </div>
-                  )
-                })}
-            </div>
-          ))}
+                      </div>
+                    )
+                  })}
+                </div>
+              )
+            })
+          )}
         </div>
 
         {/* もどる */}

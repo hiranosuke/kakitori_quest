@@ -39,7 +39,7 @@ export const ITEMS: Item[] = [
     type: 'decoration',
     id: 'helmet',
     name: 'ぼうし',
-    description: 'てつのかぶと。まもりがあがる',
+    description: 'てつのかぶと',
     price: 150,
     slot: 'hat',
     svgLayer: `
@@ -52,13 +52,14 @@ export const ITEMS: Item[] = [
     type: 'decoration',
     id: 'wizard-hat',
     name: 'まほうぼうし',
-    description: 'まほうつかいのぼうし。まりょくアップ',
+    description: 'まほうつかいのぼうし',
     price: 200,
     slot: 'hat',
     svgLayer: `
-      <polygon points="32,0 19,22 45,22" fill="#7C3AED"/>
-      <rect x="14" y="20" width="36" height="5" fill="#5B21B6"/>
-      <circle cx="32" cy="11" r="3" fill="#FCD34D"/>
+      <rect x="21" y="5" width="21" height="11" fill="#7C3AED"/>
+      <polygon points="32,0 14,20 50,20" fill="#7C3AED"/>
+      <rect x="12" y="13" width="40" height="8" fill="#5B21B6"/>
+      <circle cx="32" cy="8" r="3" fill="#FCD34D"/>
     `,
   },
   {
@@ -111,7 +112,7 @@ export const ITEMS: Item[] = [
     type: 'decoration',
     id: 'robe',
     name: 'ローブ',
-    description: 'まほうつかいのローブ。まりょくアップ',
+    description: 'まほうつかいのローブ',
     price: 350,
     slot: 'armor',
     svgLayer: `

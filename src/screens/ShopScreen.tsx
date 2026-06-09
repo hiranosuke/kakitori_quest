@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { DQWindow } from '../components/ui/DQWindow'
 import { useGameStore } from '../store/gameStore'
 import { useGoldStore } from '../store/goldStore'
@@ -15,18 +15,25 @@ export function ShopScreen() {
   const { buyItem, purchasedDecorations, potionCount } = useWardrobeStore()
   const [tab, setTab] = useState<ShopTab>('consumable')
   const [message, setMessage] = useState('')
+  const [errorPopup, setErrorPopup] = useState('')
 
   const filteredItems = ITEMS.filter((i) => i.type === tab)
 
+  useEffect(() => {
+    if (!errorPopup) return
+    const t = setTimeout(() => setErrorPopup(''), 2500)
+    return () => clearTimeout(t)
+  }, [errorPopup])
+
   function handleBuy(item: Item) {
     if (gold < item.price) {
-      setMessage(MSG.shop.insufficientGold)
+      setErrorPopup(MSG.shop.insufficientGold)
       return
     }
     const alreadyOwned =
       item.type === 'decoration' && purchasedDecorations.includes(item.id)
     if (alreadyOwned) {
-      setMessage(MSG.shop.alreadyOwned)
+      setErrorPopup(MSG.shop.alreadyOwned)
       return
     }
     buyItem(item.id)
@@ -70,8 +77,30 @@ export function ShopScreen() {
         height: '100dvh',
         background: '#000',
         padding: '16px',
+        position: 'relative',
       }}
     >
+      {/* エラーポップアップ */}
+      {errorPopup && (
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 10,
+          }}
+          onClick={() => setErrorPopup('')}
+        >
+          <DQWindow style={{ padding: '20px 32px', textAlign: 'center' as const }}>
+            <div style={{ color: 'var(--color-accent)', fontSize: '0.9em' }}>{errorPopup}</div>
+            <div style={{ color: 'var(--color-text-dim)', fontSize: '0.7em', marginTop: '8px' }}>
+              タップでとじる
+            </div>
+          </DQWindow>
+        </div>
+      )}
       <DQWindow style={{ width: '360px', maxHeight: '85vh', display: 'flex', flexDirection: 'column' }}>
         {/* ヘッダー */}
         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
@@ -133,7 +162,7 @@ export function ShopScreen() {
           })}
         </div>
 
-        {/* メッセージ */}
+        {/* 購入メッセージ */}
         {message && (
           <div style={{ color: 'var(--color-accent)', fontSize: '0.85em', padding: '8px 0', minHeight: '24px' }}>
             {message}

@@ -14,8 +14,8 @@ export const MSG = {
 
   shop: {
     title: 'おみせ',
-    tabConsumable: 'しょうひん',
-    tabDecoration: 'そうしょく',
+    tabConsumable: 'アイテム',
+    tabDecoration: 'そうび',
     buy: 'かう',
     insufficientGold: 'おかねがたりない',
     purchased: (name: string) => `${name}をかった！`,
@@ -28,6 +28,7 @@ export const MSG = {
     unequip: 'はずす',
     equippedBadge: '★そうびちゅう',
     notOwned: 'もっていない',
+    noItems: 'もちもののそうびはありません',
     equipped: (name: string) => `${name}をそうびした！`,
   },
 

@@ -22,15 +22,15 @@ const HERO_BASE = `
   <rect x="35" y="56" width="11" height="8"  fill="#2c52b3"/>
 `
 
-function buildHeroSvg(hatLayer: string, armorLayer: string): string {
-  return `<svg width="256" height="256" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+function buildHeroSvg(size: number, hatLayer: string, armorLayer: string): string {
+  return `<svg width="${size}" height="${size}" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
     ${HERO_BASE}
     ${armorLayer}
     ${hatLayer}
   </svg>`
 }
 
-export function HeroDisplay() {
+export function HeroDisplay({ size = 80 }: { size?: number }) {
   const { battlePhase, battleResult } = useGameStore()
   const equippedItems = useWardrobeStore((s) => s.equippedItems)
 
@@ -42,7 +42,7 @@ export function HeroDisplay() {
     return (item as DecorationItem).svgLayer
   }
 
-  const svgString = buildHeroSvg(getLayer('hat'), getLayer('armor'))
+  const svgString = buildHeroSvg(size, getLayer('hat'), getLayer('armor'))
 
   const animate =
     battlePhase === 'won' || (battlePhase === 'feedback' && battleResult === 'win')
@@ -54,7 +54,7 @@ export function HeroDisplay() {
   return (
     <motion.div
       animate={animate}
-      style={{ display: 'inline-block', lineHeight: 1, width: 128, height: 128 }}
+      style={{ display: 'inline-block', lineHeight: 1, width: size, height: size }}
       dangerouslySetInnerHTML={{ __html: svgString }}
     />
   )
