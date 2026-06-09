@@ -14,6 +14,7 @@ import type {
   SaveData,
 } from '../types/game'
 import { WORD_LIST, type WordEntry } from '../data/wordList'
+import { WORLDS } from '../config/worlds'
 
 const MAX_HEARTS = 3
 
@@ -30,6 +31,7 @@ interface GameStore extends SaveData {
   battleMessage: string
   battleResult: 'win' | 'lose' | null
   lastStageGold: number
+  isBossStage: boolean
 
   // クリーチャー
   stageCounter: number
@@ -46,8 +48,11 @@ interface GameStore extends SaveData {
   goToSettings: () => void
   goToShop: () => void
   goToWardrobe: () => void
+  goToWorldSelect: () => void
+  goToWorldClear: () => void
   healHeart: () => void
   startStage: (entry: WordEntry) => void
+  startBossStage: (worldId: string) => void
 
   // アクション: ゲームループ
   onStrokeMistake: () => void
@@ -84,6 +89,7 @@ export const useGameStore = create<GameStore>()(
       creatureSvg: null,
       creatureName: null,
       lastStageGold: 0,
+      isBossStage: false,
 
       goToTitle: () => set({ screen: 'title' }),
 
@@ -95,10 +101,15 @@ export const useGameStore = create<GameStore>()(
 
       goToWardrobe: () => set({ screen: 'wardrobe' }),
 
+      goToWorldSelect: () => set({ screen: 'world-select' }),
+
+      goToWorldClear: () => set({ screen: 'world-clear' }),
+
       startStage: (entry) =>
         set((state) => ({
           screen: 'game',
           currentEntry: entry,
+          isBossStage: false,
           currentCharIndex: 0,
           hearts: MAX_HEARTS,
           endingResults: [],
@@ -108,6 +119,29 @@ export const useGameStore = create<GameStore>()(
           creatureSvg: null,
           creatureName: null,
         })),
+
+      startBossStage: (worldId) => {
+        const world = WORLDS.find((w) => w.id === worldId)
+        if (!world || !world.bossWord) return
+        set((state) => ({
+          screen: 'game',
+          currentEntry: {
+            id: `boss-${worldId}`,
+            word: world.bossWord,
+            reading: world.bossWord,
+            hint: world.bossHint,
+          },
+          isBossStage: true,
+          currentCharIndex: 0,
+          hearts: MAX_HEARTS,
+          endingResults: [],
+          battlePhase: 'writing',
+          battleMessage: MSG.loading,
+          stageCounter: state.stageCounter + 1,
+          creatureSvg: null,
+          creatureName: null,
+        }))
+      },
 
       onStrokeMistake: () => {
         const hearts = get().hearts - 1
@@ -127,24 +161,26 @@ export const useGameStore = create<GameStore>()(
       },
 
       onBattleWin: () => {
-        const { currentEntry, currentCharIndex } = get()
+        const { currentEntry, currentCharIndex, isBossStage } = get()
         if (!currentEntry) return
         const nextIndex = currentCharIndex + 1
 
         if (nextIndex >= currentEntry.word.length) {
-          // 全文字クリア → ゴールド計算してステージクリア
-          const stars = calculateStars(get().endingResults)
-          const goldEarned = calcStageGold({
-            species: 0,
-            strokeCount: 0,
-            wordLength: currentEntry.word.length,
-            bestStarRating: stars,
-            playCount: 1,
-          })
-          useGoldStore.getState().addGold(goldEarned)
-          set({ screen: 'stageComplete', battlePhase: 'won', lastStageGold: goldEarned })
+          if (isBossStage) {
+            set({ screen: 'world-clear', battlePhase: 'won' })
+          } else {
+            const stars = calculateStars(get().endingResults)
+            const goldEarned = calcStageGold({
+              species: 0,
+              strokeCount: 0,
+              wordLength: currentEntry.word.length,
+              bestStarRating: stars,
+              playCount: 1,
+            })
+            useGoldStore.getState().addGold(goldEarned)
+            set({ screen: 'stageComplete', battlePhase: 'won', lastStageGold: goldEarned })
+          }
         } else {
-          // 次の文字へ
           set({
             currentCharIndex: nextIndex,
             battlePhase: 'writing',
