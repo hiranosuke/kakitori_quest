@@ -15,10 +15,10 @@ const MENU_BTN_STYLE = {
 }
 
 export function TitleScreen() {
-  const goToStageSelect = useGameStore((s) => s.goToStageSelect)
-  const goToShop       = useGameStore((s) => s.goToShop)
-  const goToWardrobe   = useGameStore((s) => s.goToWardrobe)
-  const goToSettings   = useGameStore((s) => s.goToSettings)
+  const goToWorldSelect = useGameStore((s) => s.goToWorldSelect)
+  const goToShop        = useGameStore((s) => s.goToShop)
+  const goToWardrobe    = useGameStore((s) => s.goToWardrobe)
+  const goToSettings    = useGameStore((s) => s.goToSettings)
 
   const hover = (e: React.MouseEvent<HTMLButtonElement>) =>
     (e.currentTarget.style.color = 'var(--color-accent)')
@@ -56,7 +56,7 @@ export function TitleScreen() {
         >
           QUEST
         </div>
-        <button style={MENU_BTN_STYLE} onClick={goToStageSelect} onMouseEnter={hover} onMouseLeave={leave}>
+        <button style={MENU_BTN_STYLE} onClick={goToWorldSelect} onMouseEnter={hover} onMouseLeave={leave}>
           ▶　あそぶ
         </button>
         <button style={MENU_BTN_STYLE} onClick={goToShop} onMouseEnter={hover} onMouseLeave={leave}>
