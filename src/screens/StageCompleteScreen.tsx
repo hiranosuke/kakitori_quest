@@ -4,9 +4,10 @@ import { DQWindow } from '../components/ui/DQWindow'
 import { StarRating } from '../components/ui/StarRating'
 import { useGameStore } from '../store/gameStore'
 import { calculateStars } from '../logic/starLogic'
+import { MSG } from '../config/messages'
 
 export function StageCompleteScreen() {
-  const { currentEntry, endingResults, clearedWords, goToStageSelect } = useGameStore()
+  const { currentEntry, endingResults, clearedWords, goToStageSelect, lastStageGold } = useGameStore()
   const stars = calculateStars(endingResults)
   const word = currentEntry?.word ?? ''
 
@@ -44,6 +45,11 @@ export function StageCompleteScreen() {
           <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '24px' }}>
             <StarRating stars={stars} />
           </div>
+          {lastStageGold > 0 && (
+            <div style={{ color: 'var(--color-accent)', fontSize: '1.1em', marginBottom: '16px' }}>
+              {MSG.goldEarned(lastStageGold)}
+            </div>
+          )}
           <button
             onClick={goToStageSelect}
             style={{
