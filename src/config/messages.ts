@@ -47,4 +47,15 @@ export const MSG = {
     lastWorld: 'すべてのワールドをクリア！',
     backToWorlds: 'ワールドせんたく',
   },
+
+  offline: {
+    badge: 'オフライン',
+    title: '📵 オフラインです',
+    body1: 'いちどあそんだことばは',
+    body2: 'そのままつかえます。',
+    body3: 'はじめてのことばには',
+    body4: 'インターネットが',
+    body5: 'ひつようです。',
+    close: 'とじる',
+  },
 }
