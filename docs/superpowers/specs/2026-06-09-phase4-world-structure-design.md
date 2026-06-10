@@ -84,22 +84,23 @@
 
 **ボス単語：** `かみなり`（4文字）⚡
 
-### 3-2. 2〜6ねんせいワールド（スケルトン）
+### 3-2. 2〜6ねんせいワールド
 
-実装時に kanjiapi.dev で各学年の配当漢字リストを参照しながらキュレーション。
-以下はスコープ確認用の参考案（実装前に詳細決定）。
+各ワールド5語で実装済み（kanjiapi.dev の配当漢字リストを参照してキュレーション）。
 
-| ワールド | 参考単語案 | ボス単語案 |
+| ワールド | 単語 | ボス単語 |
 |---|---|---|
-| 2年生 | 海、雲、魚、鳥、春、夏、秋、冬、星、雪 | しんりんのとり 🐦（7文字） |
-| 3年生 | 太陽、植物、動物、農業、昆虫、旅行、島、湖、祭り、研究 | ※実装時に決定 |
-| 4年生 | 自然、季節、仲間、努力、成功、伝説、完成、挑戦、連続、望遠 | ※実装時に決定 |
-| 5年生 | 環境、資源、宇宙、構造、発展、演説、責任、経済、貿易、文化 | ※実装時に決定 |
-| 6年生 | 憲法、歴史、伝統、政治、国際、科学、革命、民主、宇宙、比較 | ※実装時に決定 |
+| 2年生 | 海・星・馬・春・電車 | しんりんのとり 🐦（7文字） |
+| 3年生 | 島・橋・旅・薬・荷物 | 大海原 🌊 |
+| 4年生 | 熊・梅・松・巣・航海 | 大熊座 🐻 |
+| 5年生 | 夢・桜・演技・豊・布団 | 夢幻の桜 🌸 |
+| 6年生 | 宇宙・誕生・宝・骨・幕 | 宇宙の宝 🌌 |
 
 ---
 
 ## 4. データ設計
+
+> **実装注記（2026-06-10）:** 設計時から変更があった点を `[実装]` で注記する。
 
 ### 新規ファイル
 
@@ -116,15 +117,25 @@ export interface WorldConfig {
 export const WORLDS: WorldConfig[] = [ ... ]
 ```
 
-**`src/store/worldStore.ts`**（Zustand persist）
+**[実装] `src/store/worldStore.ts` は作成しなかった。**
+設計時は独立した worldStore を想定していたが、実装中に React の `useEffect` 依存による競合状態（ボスを倒してもワールド2が解放されないバグ）が判明した。
+根本原因は `clearedWorlds` 配列を別ストアで管理することによる更新タイミングのズレであったため、**worldStore を廃止し、状態を gameStore に統合した**。
+
+変更後の設計：
+| 項目 | 設計 | 実装 |
+|---|---|---|
+| ワールドクリア記録 | `worldStore.clearedWorlds: string[]` | `gameStore.clearedWords['boss-{worldId}'] = 1` |
+| 現在ワールドID | `worldStore.currentWorldId: string` | `gameStore.currentWorldId: string` |
+| ワールド選択操作 | `worldStore.setCurrentWorld()` | `gameStore.setCurrentWorld()` |
+
+`clearedWords` は既存の単語クリア記録（`Record<string, number>`）をそのまま流用。ボス撃破キーを `'boss-grade1'` のように名前空間で区別する。
+
+**`src/config/worlds.ts` に追加されたヘルパー関数：**
 ```ts
-interface WorldState {
-  clearedWorlds: string[]   // クリア済みワールドID
-  currentWorldId: string    // 選択中のワールドID
-  setClearedWorld: (id: string) => void
-  setCurrentWorld: (id: string) => void
-}
+export function isBossCleared(clearedWords: Record<string, number>, worldId: string): boolean
+export function isWorldUnlocked(clearedWords: Record<string, number>, worlds: WorldConfig[], idx: number): boolean
 ```
+worldStore 廃止に伴い、解放判定ロジックをデータ層（worlds.ts）に持たせた。
 
 ### id の設計方針
 
@@ -144,7 +155,7 @@ interface WorldState {
 |---|---|
 | `src/data/wordList.ts` | 各 WordEntry に `id: string` フィールドを追加、追加語を追記 |
 | `src/types/game.ts` | Screen 型に `'world-select'` と `'world-clear'` を追加 |
-| `src/store/gameStore.ts` | `isBossStage: boolean`・ボス単語セット・ワールドクリア判定を追加 |
+| `src/store/gameStore.ts` | `isBossStage: boolean`・`currentWorldId: string`・`startBossStage()`・`goToWorldSelect()`・`goToWorldClear()`・`setCurrentWorld()` を追加（worldStore 統合分含む） |
 | `src/screens/TitleScreen.tsx` | 「あそぶ」ボタンの遷移先を `'world-select'` に変更 |
 | `src/screens/StageSelectScreen.tsx` | 選択中ワールドの wordIds のみ表示・ボスステージ出現ロジック追加 |
 | `src/App.tsx` | `'world-select'` と `'world-clear'` のルート追加 |
@@ -165,7 +176,9 @@ interface WorldState {
   - 敵の見た目をボス専用SVGに変更（既存 creatureGenerator とは別の固定デザイン）
   - 書く単語は `worlds.ts` の `bossWord`
 - **クリア後：** GameScreen の勝利判定から WorldClearScreen へ遷移
-- **ワールド完了：** WorldClearScreen で `worldStore.setClearedWorld(worldId)` を呼び、次ワールドを解放
+- **ワールド完了：** `gameStore.onBattleWin` でボス撃破時に即座に `clearedWords['boss-{worldId}'] = 1` をセット（WorldClearScreen ではなく gameStore 内で完結）
+
+**[実装] ボス専用SVGは未実装。** 設計では「敵の見た目をボス専用SVGに変更」としていたが、Phase 4 スコープでは見送り。ボス戦は通常の creatureGenerator が生成した敵SVGをそのまま使用する。専用演出は Phase 5 以降のスコープ（Issue #15）。
 
 ---
 
