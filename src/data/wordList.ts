@@ -87,4 +87,34 @@ export const WORD_LIST: WordEntry[] = [
   { id: 'よる', word: 'よる', reading: 'よる', hint: '🌙' },
   { id: 'れんこん', word: 'れんこん', reading: 'れんこん', hint: '🪷' },
   { id: 'ろうそく', word: 'ろうそく', reading: 'ろうそく', hint: '🕯️' },
+  // 漢字（小学2年生）
+  { id: '海', word: '海', reading: 'うみ', hint: '🌊' },
+  { id: '星', word: '星', reading: 'ほし', hint: '⭐' },
+  { id: '馬', word: '馬', reading: 'うま', hint: '🐴' },
+  { id: '春', word: '春', reading: 'はる', hint: '🌸' },
+  { id: '電車', word: '電車', reading: 'でんしゃ', hint: '🚃' },
+  // 漢字（小学3年生）
+  { id: '島', word: '島', reading: 'しま', hint: '🏝️' },
+  { id: '橋', word: '橋', reading: 'はし', hint: '🌉' },
+  { id: '旅', word: '旅', reading: 'たび', hint: '🗺️' },
+  { id: '薬', word: '薬', reading: 'くすり', hint: '💊' },
+  { id: '荷物', word: '荷物', reading: 'にもつ', hint: '🧳' },
+  // 漢字（小学4年生）
+  { id: '熊', word: '熊', reading: 'くま', hint: '🐻' },
+  { id: '梅', word: '梅', reading: 'うめ', hint: '🌸' },
+  { id: '松', word: '松', reading: 'まつ', hint: '🌲' },
+  { id: '巣', word: '巣', reading: 'す', hint: '🪺' },
+  { id: '航海', word: '航海', reading: 'こうかい', hint: '⛵' },
+  // 漢字（小学5年生）
+  { id: '夢', word: '夢', reading: 'ゆめ', hint: '💭' },
+  { id: '桜', word: '桜', reading: 'さくら', hint: '🌸' },
+  { id: '演技', word: '演技', reading: 'えんぎ', hint: '🎭' },
+  { id: '豊', word: '豊', reading: 'ゆたか', hint: '🌾' },
+  { id: '布団', word: '布団', reading: 'ふとん', hint: '🛌' },
+  // 漢字（小学6年生）
+  { id: '宇宙', word: '宇宙', reading: 'うちゅう', hint: '🌌' },
+  { id: '誕生', word: '誕生', reading: 'たんじょう', hint: '🎂' },
+  { id: '宝', word: '宝', reading: 'たから', hint: '💎' },
+  { id: '骨', word: '骨', reading: 'ほね', hint: '🦴' },
+  { id: '幕', word: '幕', reading: 'まく', hint: '🎭' },
 ]

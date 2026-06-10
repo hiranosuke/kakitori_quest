@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { isWorldComplete } from '../../config/worlds'
+import { isWorldComplete, isBossCleared, isWorldUnlocked, WORLDS } from '../../config/worlds'
 
 describe('isWorldComplete', () => {
   it('全単語がクリア済みのとき true を返す', () => {
@@ -28,5 +28,33 @@ describe('isWorldComplete', () => {
 
   it('wordIds が空のとき true を返す（ボスのみワールド想定）', () => {
     expect(isWorldComplete({}, [])).toBe(true)
+  })
+})
+
+describe('isBossCleared', () => {
+  it('boss-grade1 キーが 1 以上のとき true を返す', () => {
+    expect(isBossCleared({ 'boss-grade1': 1 }, 'grade1')).toBe(true)
+  })
+
+  it('boss-grade1 キーがないとき false を返す', () => {
+    expect(isBossCleared({}, 'grade1')).toBe(false)
+  })
+
+  it('boss-grade1 が 0 のとき false を返す', () => {
+    expect(isBossCleared({ 'boss-grade1': 0 }, 'grade1')).toBe(false)
+  })
+})
+
+describe('isWorldUnlocked', () => {
+  it('最初のワールド（idx=0）は常に解放済み', () => {
+    expect(isWorldUnlocked({}, WORLDS, 0)).toBe(true)
+  })
+
+  it('前のワールドのボスが未撃破なら解放されない', () => {
+    expect(isWorldUnlocked({}, WORLDS, 1)).toBe(false)
+  })
+
+  it('前のワールドのボスを倒していれば解放される', () => {
+    expect(isWorldUnlocked({ 'boss-grade1': 1 }, WORLDS, 1)).toBe(true)
   })
 })

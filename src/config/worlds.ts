@@ -13,6 +13,22 @@ export function isWorldComplete(
   return wordIds.every((id) => (clearedWords[id] ?? 0) > 0)
 }
 
+export function isBossCleared(
+  clearedWords: Record<string, number>,
+  worldId: string,
+): boolean {
+  return (clearedWords[`boss-${worldId}`] ?? 0) > 0
+}
+
+export function isWorldUnlocked(
+  clearedWords: Record<string, number>,
+  worlds: WorldConfig[],
+  idx: number,
+): boolean {
+  if (idx === 0) return true
+  return isBossCleared(clearedWords, worlds[idx - 1].id)
+}
+
 export const WORLDS: WorldConfig[] = [
   {
     id: 'grade1',
@@ -44,36 +60,36 @@ export const WORLDS: WorldConfig[] = [
   {
     id: 'grade2',
     name: '2ねんせいワールド',
-    wordIds: [],
+    wordIds: ['海', '星', '馬', '春', '電車'],
     bossWord: 'しんりんのとり',
     bossHint: '🐦',
   },
   {
     id: 'grade3',
     name: '3ねんせいワールド',
-    wordIds: [],
-    bossWord: '',
-    bossHint: '👾',
+    wordIds: ['島', '橋', '旅', '薬', '荷物'],
+    bossWord: '大海原',
+    bossHint: '🌊',
   },
   {
     id: 'grade4',
     name: '4ねんせいワールド',
-    wordIds: [],
-    bossWord: '',
-    bossHint: '👾',
+    wordIds: ['熊', '梅', '松', '巣', '航海'],
+    bossWord: '大熊座',
+    bossHint: '🐻',
   },
   {
     id: 'grade5',
     name: '5ねんせいワールド',
-    wordIds: [],
-    bossWord: '',
-    bossHint: '👾',
+    wordIds: ['夢', '桜', '演技', '豊', '布団'],
+    bossWord: '夢幻の桜',
+    bossHint: '🌸',
   },
   {
     id: 'grade6',
     name: '6ねんせいワールド',
-    wordIds: [],
-    bossWord: '',
-    bossHint: '👾',
+    wordIds: ['宇宙', '誕生', '宝', '骨', '幕'],
+    bossWord: '宇宙の宝',
+    bossHint: '🌌',
   },
 ]
