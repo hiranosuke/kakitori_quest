@@ -9,21 +9,31 @@ import { SettingsScreen } from './screens/SettingsScreen'
 import { ShopScreen } from './screens/ShopScreen'
 import { WardrobeScreen } from './screens/WardrobeScreen'
 import { WorldClearScreen } from './screens/WorldClearScreen'
+import { OfflineBadge } from './components/ui/OfflineBadge'
 
 export default function App() {
   const screen = useGameStore((s) => s.screen)
 
-  switch (screen) {
-    case 'title':         return <TitleScreen />
-    case 'world-select':  return <WorldSelectScreen />
-    case 'stageSelect':   return <StageSelectScreen />
-    case 'game':          return <GameScreen />
-    case 'stageComplete': return <StageCompleteScreen />
-    case 'gameOver':      return <GameOverScreen />
-    case 'settings':      return <SettingsScreen />
-    case 'shop':          return <ShopScreen />
-    case 'wardrobe':      return <WardrobeScreen />
-    case 'world-clear':   return <WorldClearScreen />
-    default:              return <TitleScreen />
+  function renderScreen() {
+    switch (screen) {
+      case 'title':         return <TitleScreen />
+      case 'world-select':  return <WorldSelectScreen />
+      case 'stageSelect':   return <StageSelectScreen />
+      case 'game':          return <GameScreen />
+      case 'stageComplete': return <StageCompleteScreen />
+      case 'gameOver':      return <GameOverScreen />
+      case 'settings':      return <SettingsScreen />
+      case 'shop':          return <ShopScreen />
+      case 'wardrobe':      return <WardrobeScreen />
+      case 'world-clear':   return <WorldClearScreen />
+      default:              return <TitleScreen />
+    }
   }
+
+  return (
+    <>
+      {renderScreen()}
+      <OfflineBadge />
+    </>
+  )
 }

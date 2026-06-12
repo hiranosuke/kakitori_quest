@@ -1,5 +1,5 @@
 import { renderHook, act } from '@testing-library/react'
-import { vi } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import { useOnlineStatus } from '../../hooks/useOnlineStatus'
 
 describe('useOnlineStatus', () => {
