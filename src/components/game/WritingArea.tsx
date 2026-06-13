@@ -5,6 +5,7 @@ import { HeartDisplay } from '../ui/HeartDisplay'
 import { useGameStore } from '../../store/gameStore'
 import { useOnlineStatus } from '../../hooks/useOnlineStatus'
 import { MSG } from '../../config/messages'
+import { play } from '../../lib/soundManager'
 
 interface WritingAreaProps {
   char: string
@@ -92,6 +93,7 @@ export function WritingArea({
         size: size > 0 ? size : undefined,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         onCorrectStroke: (data: any) => {
+          play('correct_stroke')
           setHasStarted(true)
           const result: StrokeEndingResult = {
             strokeIndex: strokeIndexRef.current++,

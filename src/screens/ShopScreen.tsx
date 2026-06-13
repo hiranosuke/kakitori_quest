@@ -5,6 +5,7 @@ import { useGoldStore } from '../store/goldStore'
 import { useWardrobeStore } from '../store/wardrobeStore'
 import { ITEMS } from '../config/items'
 import { MSG } from '../config/messages'
+import { play } from '../lib/soundManager'
 import type { Item } from '../config/items'
 
 type ShopTab = 'consumable' | 'decoration'
@@ -37,6 +38,7 @@ export function ShopScreen() {
       return
     }
     buyItem(item.id)
+    play('shop_buy')
     setMessage(MSG.shop.purchased(item.name))
   }
 

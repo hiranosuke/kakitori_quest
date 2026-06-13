@@ -15,6 +15,7 @@ import type {
 } from '../types/game'
 import { WORD_LIST, type WordEntry } from '../data/wordList'
 import { WORLDS } from '../config/worlds'
+import { play } from '../lib/soundManager'
 
 const MAX_HEARTS = 3
 
@@ -114,7 +115,8 @@ export const useGameStore = create<GameStore>()(
 
       goToWorldClear: () => set({ screen: 'world-clear' }),
 
-      startStage: (entry) =>
+      startStage: (entry) => {
+        play('battle_start')
         set((state) => ({
           screen: 'game',
           currentEntry: entry,
@@ -127,11 +129,13 @@ export const useGameStore = create<GameStore>()(
           stageCounter: state.stageCounter + 1,
           creatureSvg: null,
           creatureName: null,
-        })),
+        }))
+      },
 
       startBossStage: (worldId) => {
         const world = WORLDS.find((w) => w.id === worldId)
         if (!world || !world.bossWord) return
+        play('boss_start')
         set((state) => ({
           screen: 'game',
           currentEntry: {
@@ -155,8 +159,10 @@ export const useGameStore = create<GameStore>()(
       onStrokeMistake: () => {
         const hearts = get().hearts - 1
         if (hearts <= 0) {
+          play('game_over')
           set({ screen: 'gameOver', battlePhase: 'lost' })
         } else {
+          play('mistake')
           set({ hearts, battleMessage: MSG.strokeMistake })
         }
       },
@@ -176,6 +182,7 @@ export const useGameStore = create<GameStore>()(
 
         if (nextIndex >= currentEntry.word.length) {
           if (isBossStage) {
+            play('boss_clear')
             const worldId = get().currentWorldId
             set((s) => ({
               screen: 'world-clear',
@@ -183,6 +190,7 @@ export const useGameStore = create<GameStore>()(
               clearedWords: { ...s.clearedWords, [`boss-${worldId}`]: 1 },
             }))
           } else {
+            play('stage_clear')
             const stars = calculateStars(get().endingResults)
             const goldEarned = calcStageGold({
               species: 0,
@@ -195,6 +203,7 @@ export const useGameStore = create<GameStore>()(
             set({ screen: 'stageComplete', battlePhase: 'won', lastStageGold: goldEarned })
           }
         } else {
+          play('char_complete')
           set({
             currentCharIndex: nextIndex,
             battlePhase: 'writing',
@@ -207,8 +216,10 @@ export const useGameStore = create<GameStore>()(
         const hearts = get().hearts - 1
         const currentEntry = get().currentEntry
         if (hearts <= 0) {
+          play('game_over')
           set({ screen: 'gameOver', battlePhase: 'lost' })
         } else {
+          play('battle_lose')
           set({
             hearts,
             battlePhase: 'writing',
@@ -240,6 +251,7 @@ export const useGameStore = create<GameStore>()(
         const { hearts } = get()
         if (hearts >= MAX_HEARTS) return
         if (!useWardrobeStore.getState().usePotion()) return
+        play('item_use')
         set((s) => ({
           hearts: Math.min(s.hearts + 1, MAX_HEARTS),
           battleMessage: MSG.potion.used,
