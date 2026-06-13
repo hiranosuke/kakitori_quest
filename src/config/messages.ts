@@ -59,5 +59,6 @@ export const MSG = {
     close: 'とじる',
     goToTitle: 'タイトルにもどる',
     loadError: 'データをよみこめませんでした。',
+    retry: 'もういちどためす',
   },
 }

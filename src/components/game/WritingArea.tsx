@@ -3,6 +3,7 @@ import type { StrokeEndingResult, EndingType } from '../../types/game'
 import { STROKE_ENDING_OVERRIDES } from '../../data/strokeEndingOverrides'
 import { HeartDisplay } from '../ui/HeartDisplay'
 import { useGameStore } from '../../store/gameStore'
+import { useOnlineStatus } from '../../hooks/useOnlineStatus'
 import { MSG } from '../../config/messages'
 
 interface WritingAreaProps {
@@ -30,12 +31,25 @@ export function WritingArea({
   onComplete,
 }: WritingAreaProps) {
   const goToTitle = useGameStore((s) => s.goToTitle)
+  const isOnline = useOnlineStatus()
   const wrapperRef = useRef<HTMLDivElement>(null)
   const hostRef = useRef<HTMLDivElement>(null)
   const strokeResultsRef = useRef<StrokeEndingResult[]>([])
   const strokeIndexRef = useRef(0)
   const [hasStarted, setHasStarted] = useState(false)
   const [loadError, setLoadError] = useState(false)
+  const [retryKey, setRetryKey] = useState(0)
+
+  const retry = useCallback(() => {
+    setLoadError(false)
+    setHasStarted(false)
+    setRetryKey((k) => k + 1)
+  }, [])
+
+  // オンラインに復帰したら自動リトライ
+  useEffect(() => {
+    if (isOnline && loadError) retry()
+  }, [isOnline]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleComplete = useCallback(() => {
     onComplete(strokeResultsRef.current)
@@ -104,7 +118,7 @@ export function WritingArea({
       cancelled = true
       charInstance?.unmount?.()
     }
-  }, [char, maxSize, onMistake, handleComplete])
+  }, [char, maxSize, onMistake, handleComplete, retryKey])
 
   // ライブラリが内部エラーを握りつぶして一切コールバックを呼ばない場合に備え
   // hasStarted にならないまま一定時間経過したらエラー扱いにする
@@ -134,11 +148,24 @@ export function WritingArea({
           {MSG.offline.loadError}
         </p>
         <button
-          onClick={goToTitle}
+          onClick={retry}
           style={{
             background: 'none',
             border: 'none',
             color: 'var(--color-accent)',
+            fontFamily: 'var(--font-pixel)',
+            fontSize: '1em',
+            cursor: 'pointer',
+          }}
+        >
+          ▶　{MSG.offline.retry}
+        </button>
+        <button
+          onClick={goToTitle}
+          style={{
+            background: 'none',
+            border: 'none',
+            color: 'var(--color-text)',
             fontFamily: 'var(--font-pixel)',
             fontSize: '1em',
             cursor: 'pointer',
