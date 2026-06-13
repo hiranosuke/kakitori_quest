@@ -42,6 +42,17 @@ export default defineConfig({
               },
             },
           },
+          {
+            urlPattern: /^https:\/\/unpkg\.com\/.*/i,
+            handler: 'StaleWhileRevalidate',
+            options: {
+              cacheName: 'cdn-kakitori-data',
+              expiration: {
+                maxEntries: 300,
+                maxAgeSeconds: 60 * 60 * 24 * 30,
+              },
+            },
+          },
         ],
       },
     }),

@@ -2,6 +2,8 @@ import { useEffect, useRef, useCallback, useState } from 'react'
 import type { StrokeEndingResult, EndingType } from '../../types/game'
 import { STROKE_ENDING_OVERRIDES } from '../../data/strokeEndingOverrides'
 import { HeartDisplay } from '../ui/HeartDisplay'
+import { useGameStore } from '../../store/gameStore'
+import { MSG } from '../../config/messages'
 
 interface WritingAreaProps {
   char: string
@@ -27,11 +29,13 @@ export function WritingArea({
   onMistake,
   onComplete,
 }: WritingAreaProps) {
+  const goToTitle = useGameStore((s) => s.goToTitle)
   const wrapperRef = useRef<HTMLDivElement>(null)
   const hostRef = useRef<HTMLDivElement>(null)
   const strokeResultsRef = useRef<StrokeEndingResult[]>([])
   const strokeIndexRef = useRef(0)
   const [hasStarted, setHasStarted] = useState(false)
+  const [loadError, setLoadError] = useState(false)
 
   const handleComplete = useCallback(() => {
     onComplete(strokeResultsRef.current)
@@ -43,6 +47,7 @@ export function WritingArea({
     strokeResultsRef.current = []
     strokeIndexRef.current = 0
     setHasStarted(false)
+    setLoadError(false)
 
     let cancelled = false
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -91,13 +96,51 @@ export function WritingArea({
       charInstance.start()
     }
 
-    init()
+    init().catch(() => {
+      if (!cancelled) setLoadError(true)
+    })
 
     return () => {
       cancelled = true
       charInstance?.unmount?.()
     }
   }, [char, maxSize, onMistake, handleComplete])
+
+  if (loadError) {
+    return (
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          height: '100%',
+          gap: '16px',
+          border: '3px solid var(--color-window-border)',
+          background: '#000',
+          padding: '16px',
+          textAlign: 'center',
+        }}
+      >
+        <p style={{ color: 'var(--color-accent)', fontSize: '0.85em', lineHeight: 1.8 }}>
+          {MSG.offline.loadError}
+        </p>
+        <button
+          onClick={goToTitle}
+          style={{
+            background: 'none',
+            border: 'none',
+            color: 'var(--color-accent)',
+            fontFamily: 'var(--font-pixel)',
+            fontSize: '1em',
+            cursor: 'pointer',
+          }}
+        >
+          ▶　{MSG.offline.goToTitle}
+        </button>
+      </div>
+    )
+  }
 
   return (
     <div

@@ -58,5 +58,6 @@ export const MSG = {
     body5: 'ひつようです。',
     close: 'とじる',
     goToTitle: 'タイトルにもどる',
+    loadError: 'データをよみこめませんでした。',
   },
 }
