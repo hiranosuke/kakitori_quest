@@ -36,3 +36,12 @@ html, body, #root {
 .writing-pulse {
   animation: pulse-border 1.2s ease-in-out infinite;
 }
+
+@keyframes text-blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.2; }
+}
+
+.loading-blink {
+  animation: text-blink 1s ease-in-out infinite;
+}

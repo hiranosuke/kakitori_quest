@@ -37,12 +37,15 @@ export function WritingArea({
   const strokeResultsRef = useRef<StrokeEndingResult[]>([])
   const strokeIndexRef = useRef(0)
   const [hasStarted, setHasStarted] = useState(false)
+  const [isLoaded, setIsLoaded] = useState(false)
+  const [showLoading, setShowLoading] = useState(false)
   const [loadError, setLoadError] = useState(false)
   const [retryKey, setRetryKey] = useState(0)
 
   const retry = useCallback(() => {
     setLoadError(false)
     setHasStarted(false)
+    setIsLoaded(false)
     setRetryKey((k) => k + 1)
   }, [])
 
@@ -61,6 +64,7 @@ export function WritingArea({
     strokeResultsRef.current = []
     strokeIndexRef.current = 0
     setHasStarted(false)
+    setIsLoaded(false)
     setLoadError(false)
 
     let cancelled = false
@@ -108,6 +112,7 @@ export function WritingArea({
         },
       })
       charInstance.start()
+      if (!cancelled) setIsLoaded(true)
     }
 
     init().catch(() => {
@@ -120,13 +125,21 @@ export function WritingArea({
     }
   }, [char, maxSize, onMistake, handleComplete, retryKey])
 
-  // ライブラリが内部エラーを握りつぶして一切コールバックを呼ばない場合に備え
-  // hasStarted にならないまま一定時間経過したらエラー扱いにする
+  // 800ms 後もまだロード未完了なら loading インジケーターを表示
   useEffect(() => {
-    if (hasStarted || loadError) return
+    setShowLoading(false)
+    if (isLoaded || loadError) return
+    const timer = setTimeout(() => setShowLoading(true), 800)
+    return () => clearTimeout(timer)
+  }, [char, isLoaded, loadError, retryKey])
+
+  // ライブラリが内部エラーを握りつぶして一切コールバックを呼ばない場合に備え
+  // isLoaded にならないまま一定時間経過したらエラー扱いにする
+  useEffect(() => {
+    if (isLoaded || loadError) return
     const timer = setTimeout(() => setLoadError(true), 6000)
     return () => clearTimeout(timer)
-  }, [char, hasStarted, loadError])
+  }, [char, isLoaded, loadError, retryKey])
 
   if (loadError) {
     return (
@@ -209,7 +222,7 @@ export function WritingArea({
       >
         <div
           ref={hostRef}
-          className={hasStarted ? undefined : 'writing-pulse'}
+          className={isLoaded && !hasStarted ? 'writing-pulse' : undefined}
           style={{
             position: 'relative',
             border: '2px solid transparent',
@@ -218,7 +231,24 @@ export function WritingArea({
           }}
         />
       </div>
-      {!hasStarted && (
+      {!isLoaded && showLoading && (
+        <div
+          className="loading-blink"
+          style={{
+            position: 'absolute',
+            bottom: '60px',
+            left: 0,
+            right: 0,
+            textAlign: 'center',
+            color: 'var(--color-accent)',
+            fontSize: '0.75em',
+            pointerEvents: 'none',
+          }}
+        >
+          {MSG.loading}
+        </div>
+      )}
+      {isLoaded && !hasStarted && (
         <div
           style={{
             position: 'absolute',
